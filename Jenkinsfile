@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKER_HOST = "tcp://localhost:2375"
-    }
-
     stages {
         stage('Build') {
             agent {
@@ -20,21 +16,23 @@ pipeline {
                 npm --version
                 npm ci
                 npm run build
+                ls -la
                 '''
             }
         }
 
-        stage('Test') {
+        stage ('Test') {
             agent {
                 docker {
                     image 'node:18-alpine'
                     reuseNode true
                 }
             }
+
             steps {
                 sh '''
-                test -f build/index.html
-                npm test
+                    test -f build/index.html
+                    npm test
                 '''
             }
         }
