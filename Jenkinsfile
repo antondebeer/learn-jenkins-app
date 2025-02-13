@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKER_HOST = "tcp://docker:2376"
+    }
+
     stages {
         stage('Build') {
             agent {
@@ -21,14 +25,13 @@ pipeline {
             }
         }
 
-        stage ('Test') {
+        stage('Test') {
             agent {
                 docker {
                     image 'node:18-alpine'
                     reuseNode true
                 }
             }
-
             steps {
                 sh '''
                     test -f build/index.html
